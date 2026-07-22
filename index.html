@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Arsip Digital</title>
+    
+    <!-- Meta tag untuk SEO dasar (opsional) -->
+    <meta name="description" content="Aplikasi Arsip Digital untuk manajemen dokumen">
+    
+    <style>
+        /* CSS reset dasar */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Mencegah scroll ganda di halaman utama */
+            background-color: #f3f4f6; /* Warna bg-gray-100 dari Tailwind */
+        }
+        
+        .app-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Pengaturan Iframe untuk menyembunyikan banner atas Google Script */
+        iframe {
+            position: absolute;
+            top: -48px; /* Menarik frame ke atas sebesar tinggi banner Google (~45-50px) */
+            left: 0;
+            width: 100%;
+            height: calc(100% + 48px); /* Menambah tinggi untuk menutupi tarikan ke atas */
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container Iframe -->
+    <div class="app-container">
+        <!-- PENTING: Ganti URL di bawah ini dengan URL Web App (akhiran /exec) milik Anda -->
+        <iframe src="https://script.google.com/macros/s/AKfycbzEeegH7gQvzXFaGnc5E6XYz18RZLK9uAgm3yoPM3VBnH-Bqpqx4mI-Y4bwvJslSqGbxA/exec" title="Aplikasi Arsip Digital" allowfullscreen></iframe>
+    </div>
+
+</body>
+</html>
