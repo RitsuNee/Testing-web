@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Arsip Digital</title>
+    <title>Aplikasi Arsip Digital & Pendataan</title>
     
-    <!-- Meta tag untuk SEO dasar (opsional) -->
-    <meta name="description" content="Aplikasi Arsip Digital untuk manajemen dokumen">
+    <meta name="description" content="Aplikasi Arsip Digital dengan Sistem Hak Akses dan Filter Kelurahan">
     
     <style>
-        /* CSS reset dasar */
+        /* CSS reset dasar untuk fullscreen layout */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
             width: 100%;
             overflow: hidden; /* Mencegah scroll ganda di halaman utama */
-            background-color: #f3f4f6; /* Warna bg-gray-100 dari Tailwind */
+            background-color: #f3f4f6;
         }
         
         .app-container {
@@ -29,7 +28,7 @@
         /* Pengaturan Iframe untuk menyembunyikan banner atas Google Script */
         iframe {
             position: absolute;
-            top: -48px; /* Menarik frame ke atas sebesar tinggi banner Google (~45-50px) */
+            top: -48px; /* Menarik frame ke atas sebesar tinggi banner Google */
             left: 0;
             width: 100%;
             height: calc(100% + 48px); /* Menambah tinggi untuk menutupi tarikan ke atas */
@@ -39,10 +38,9 @@
 </head>
 <body>
 
-    <!-- Container Iframe -->
     <div class="app-container">
-        <!-- PENTING: Ganti URL di bawah ini dengan URL Web App (akhiran /exec) milik Anda -->
-        <iframe src="" title="Aplikasi Arsip Digital" allowfullscreen></iframe>
+        <!-- PENTING: Ganti URL di bawah ini dengan URL Web App (akhiran /exec) milik Anda setelah di-deploy -->
+        <iframe src="https://script.google.com/macros/s/AKfycbwhO16TTICLxQQnYn9QhbsX0_0H0ruRh2I_5giW7F93o9-hpzFGTbWYlA4hg2NWVWAHxA/exec" title="Aplikasi Arsip Digital & Pendataan" allowfullscreen></iframe>
     </div>
 
 </body>
