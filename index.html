@@ -12,8 +12,8 @@
         body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
-            width: 100%;
+            height: 100vh;
+            width: 100vw;
             overflow: hidden; /* Mencegah scroll ganda di halaman utama */
             background-color: #f3f4f6;
         }
@@ -28,10 +28,11 @@
         /* Pengaturan Iframe untuk menyembunyikan banner atas Google Script */
         iframe {
             position: absolute;
-            top: -40px; /* Menarik frame ke atas sebesar tinggi banner Google */
+            /* Menarik frame ke atas. Banner peringatan Google biasanya persis 36px */
+            top: -36px; 
             left: 0;
             width: 100%;
-            height: calc(100% + 40px); /* Menambah tinggi untuk menutupi tarikan ke atas */
+            height: calc(100% + 36px);
             border: none;
         }
     </style>
@@ -39,8 +40,8 @@
 <body>
 
     <div class="app-container">
-        <!-- PENTING: Ganti URL di bawah ini dengan URL Web App (akhiran /exec) milik Anda setelah di-deploy -->
-        <iframe src="https://script.google.com/macros/s/AKfycbwmt1izdHQ09i3OdyYFTLbbXQXgSk5ghaXFaGxv3C8iZkq09nBsB1epB7UvpJTgWHKS2A/exec" alt="Ardi was here" allowfullscreen></iframe>
+        <!-- PENTING: Ganti URL di bawah ini dengan URL Web App milik Anda -->
+        <iframe src="https://script.google.com/macros/s/AKfycbwmt1izdHQ09i3OdyYFTLbbXQXgSk5ghaXFaGxv3C8iZkq09nBsB1epB7UvpJTgWHKS2A/exec" allowfullscreen></iframe>
     </div>
 
 </body>
