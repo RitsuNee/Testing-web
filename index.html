@@ -7,6 +7,13 @@
     
     <meta name="description" content="Ardi was here">
     
+    <!-- 
+      LAYER 1: Anti-DevTools Script
+      Script ini secara aktif memblokir F12, Klik Kanan -> Inspect, dan berbagai shortcut DevTools.
+      Jika DevTools dipaksa buka, script ini akan mengganggu tampilannya.
+    -->
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
+    
     <style>
         /* CSS reset dasar untuk fullscreen layout */
         body, html {
@@ -14,11 +21,11 @@
             padding: 0;
             height: 100vh;
             width: 100vw;
-            overflow: hidden; /* Mencegah scroll ganda di halaman utama */
+            overflow: hidden; 
             background-color: #f3f4f6;
         }
         
-        .app-container {
+        #app-container {
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -28,21 +35,82 @@
         /* Pengaturan Iframe untuk menyembunyikan banner atas Google Script */
         iframe {
             position: absolute;
-            /* Menarik frame ke atas. Banner peringatan Google biasanya persis 36px */
             top: -36px; 
             left: 0;
             width: 100%;
             height: calc(100% + 36px);
             border: none;
         }
+
+        /* Tampilan saat loading */
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: sans-serif;
+            color: #666;
+        }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- PENTING: Ganti URL di bawah ini dengan URL Web App milik Anda -->
-        <iframe src="https://script.google.com/macros/s/AKfycbxcgCAKzjpzqgZ5hvSr4lKNqR1vF2JHOkYWzoRdQ6EYvjIbxZIzB8XGPB7lI4muA2y0Gw/exec" allowfullscreen></iframe>
+    <div id="app-container">
+        <div id="loading">Memuat Sistem...</div>
+        <!-- Iframe akan di-generate di sini oleh JavaScript -->
     </div>
 
+    <script>
+        // LAYER 2: Nonaktifkan Shortcut Keyboard Tambahan & Klik Kanan
+        document.addEventListener('contextmenu', event => event.preventDefault()); // Blokir klik kanan
+        document.onkeydown = function(e) {
+            // Blokir F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Ctrl+S, dll.
+            if(e.keyCode == 123) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+            if(e.ctrlKey && e.keyCode == 'S'.charCodeAt(0)) { return false; }
+        }
+
+        // LAYER 3: Obfuscation URL (Base64) & Dynamic Blob Creation
+        // Teks "aHR0cHM6..." di bawah adalah Base64 dari link Google Script Anda.
+        // Link asli: https://script.google.com/macros/s/AKfycbxcgCAKzjpzqgZ5hvSr4lKNqR1vF2JHOkYWzoRdQ6EYvjIbxZIzB8XGPB7lI4muA2y0Gw/exec
+        const encodedTarget = "aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J4Y2dDQUt6anB6cWdaNWh2U3I0bEtOcVIxdkYySkhPa1lXem9SZEE2RVl2aklieFpJekI4WEdQQjdsSTRtdUEyeTBHdy9leGVj";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // 1. Decode URL
+            const decodedUrl = atob(encodedTarget);
+
+            // 2. Buat elemen Iframe
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('allowfullscreen', 'true');
+            
+            // 3. Teknik Blob untuk menyamarkan Source di DOM
+            // Alih-alih memberikan src langsung, kita membungkusnya dalam script redirect di dalam Blob
+            const htmlContent = `
+                <html>
+                    <body style="margin:0;padding:0;">
+                        <script>
+                            window.location.replace("${decodedUrl}");
+                        <\/script>
+                    </body>
+                </html>
+            `;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const blobUrl = URL.createObjectURL(blob);
+            
+            iframe.src = blobUrl;
+
+            // 4. Masukkan ke halaman dan hapus loading text
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('app-container').appendChild(iframe);
+            
+            // Opsional: Cabut URL Blob setelah termuat agar lebih sulit di-inspect jika dicari manual
+            iframe.onload = () => {
+                URL.revokeObjectURL(blobUrl);
+            };
+        });
+    </script>
 </body>
 </html>
