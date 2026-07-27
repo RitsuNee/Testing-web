@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Editor V.1.0</title>
-    
     <meta name="description" content="Ardi was here">
     
     <style>
@@ -16,33 +15,152 @@
             width: 100vw;
             overflow: hidden; /* Mencegah scroll ganda di halaman utama */
             background-color: #f3f4f6;
+            /* Mencegah seleksi teks untuk mempersulit penyalinan */
+            user-select: none; 
+            -webkit-user-select: none;
         }
         
-        .app-container {
+        #app-container {
             width: 100%;
             height: 100%;
             overflow: hidden;
             position: relative;
         }
         
-        /* Pengaturan Iframe untuk menyembunyikan banner atas Google Script */
-        iframe {
+        /* --- */
+        /* --- */
+        .secure-frame {
             position: absolute;
-            /* Menarik frame ke atas. Banner peringatan Google biasanya persis 36px */
+            /* --- */
             top: -36px; 
             left: 0;
             width: 100%;
             height: calc(100% + 36px);
             border: none;
+            background-color: #fff; /* Memberikan background agar tidak transparan */
+        }
+
+        /* --- */
+        #loading-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-family: sans-serif;
+            color: #666;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
-<body>
+<!-- --- -->
+<body oncontextmenu="return false;">
 
-    <div class="app-container">
-        <!-- PENTING: Ganti URL di bawah ini dengan URL Web App milik Anda -->
-        <iframe src="https://script.google.com/macros/s/AKfycbzDMXbhjhmKv22KeAKbWyRsgt0YxNbgc_r9fEbO3qwK1fm5ls6oRYgCZxTnrI2d7IbC4Q/exec" allowfullscreen></iframe>
-    </div>
+    <div id="loading-overlay">Memuat data...</div>
+    <div id="app-container"></div>
 
+    <script id="core-engine">
+        (function() {
+            // 1. ---
+            document.addEventListener('keydown', function(e) {
+                // 
+                if(e.key === 'F12' || e.keyCode === 123) {
+                    e.preventDefault();
+                    return false;
+                }
+                // 
+                if((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+                    e.preventDefault();
+                    return false;
+                }
+                // ---
+                if((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+                    e.preventDefault();
+                    return false;
+                }
+                // ---
+                if((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+                    e.preventDefault();
+                    return false;
+                }
+                // ---
+                if((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+                    e.preventDefault();
+                    return false;
+                }
+            }, false);
+
+            // 
+            const obfuscatedTarget = [
+                104, 116, 116, 112, 115, 58, 47, 47, 115, 99, 114, 105, 112, 116, 46, 103, 
+                111, 111, 103, 108, 101, 46, 99, 111, 109, 47, 109, 97, 99, 114, 111, 115, 
+                47, 115, 47, 65, 75, 102, 121, 99, 98, 122, 68, 77, 88, 98, 104, 106, 104, 
+                109, 75, 118, 50, 50, 75, 101, 65, 75, 98, 87, 121, 82, 115, 103, 116, 48, 
+                89, 120, 78, 98, 103, 99, 95, 114, 57, 102, 69, 98, 79, 51, 113, 119, 75, 
+                49, 102, 109, 53, 108, 115, 54, 111, 82, 89, 103, 67, 90, 120, 84, 110, 114, 
+                73, 50, 100, 55, 73, 98, 67, 52, 81, 47, 101, 120, 101, 99
+            ];
+            
+            function initApp() {
+                try {
+                    // ---
+                    let realTarget = '';
+                    for (let i = 0; i < obfuscatedTarget.length; i++) {
+                        realTarget += String.fromCharCode(obfuscatedTarget[i]);
+                    }
+                    
+                    // ---
+                    const frame = document.createElement('iframe');
+                    frame.className = 'secure-frame';
+                    frame.allowFullscreen = true;
+                    // frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups'); // Opsional keamanan tambahan
+                    
+                    // ---
+                    frame.onload = function() {
+                        const overlay = document.getElementById('loading-overlay');
+                        if(overlay) {
+                            overlay.style.opacity = '0';
+                            setTimeout(() => overlay.remove(), 500); // Hapus dari DOM
+                        }
+                    };
+
+                    // ---
+                    frame.src = realTarget;
+                    document.getElementById('app-container').appendChild(frame);
+                } catch (e) {
+                    console.error("Initialization failed.");
+                    document.getElementById('loading-overlay').innerText = "Gagal memuat aplikasi.";
+                }
+            }
+
+            // ---
+            window.onload = function() {
+                initApp();
+                
+                // 3. PENGHANCURAN DIRI (Self-Destruct)
+                // Menghapus blok <script id="core-engine"> ini dari Inspect Element
+                // segera setelah dieksekusi. Ini membuat Tab Elements/Inspector terlihat kosong.
+                setTimeout(function() {
+                    const engineScript = document.getElementById('core-engine');
+                    if (engineScript) {
+                        engineScript.parentNode.removeChild(engineScript);
+                    }
+                }, 100);
+            };
+
+            // -
+            setInterval(function(){
+                var before = new Date().getTime();
+                debugger; 
+                var after = new Date().getTime();
+                if (after - before > 100) {
+                    // -
+                }
+            }, 2000);
+
+        })();
+    </script>
 </body>
 </html>
